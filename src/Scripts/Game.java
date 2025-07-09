@@ -17,8 +17,10 @@ public class Game {
     private List<Piece> allPieces;
 
     private PieceColor atTurn;
+    private GameMode gameMode;
 
     public Game(GUI gui) {
+        gameModeSelection();
         board = new Board();
         atTurn = PieceColor.WHITE;
         selectedPiecePosition = new int[2];
@@ -125,4 +127,24 @@ public class Game {
     public Board getBoard() {
         return board;
     }
+
+    public void gameModeSelection() {
+        String[] options = { "Player vs Player", "vs Easy AI", "vs Hard AI"};
+        String choice = (String) JOptionPane.showInputDialog(
+                null,
+                "Wähle deinen Spielmodus: ",
+                "Spielmodusauswahl",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                "Player vs Player");
+
+        gameMode = switch (choice) {
+            case "Player vs Player" -> GameMode.PLAYER_VS_PLAYER;
+            case "vs Easy AI" -> GameMode.EASY_AI;
+            case "vs Hard AI" -> GameMode.HARD_AI;
+            default -> GameMode.PLAYER_VS_PLAYER;
+        };
+    }
+
 }
