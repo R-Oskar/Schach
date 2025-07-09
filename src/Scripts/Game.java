@@ -17,6 +17,7 @@ public class Game {
     private List<Piece> allPieces;
 
     private PieceColor atTurn;
+    private PieceColor playerColor;
     private GameMode gameMode;
 
     public Game(GUI gui) {
@@ -129,7 +130,7 @@ public class Game {
     }
 
     public void gameModeSelection() {
-        String[] options = { "Player vs Player", "vs Easy AI", "vs Hard AI"};
+        String[] options = { "Player vs Player", "vs Easy AI", "vs Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,
                 "Wähle deinen Spielmodus: ",
@@ -144,6 +145,22 @@ public class Game {
             case "vs Easy AI" -> GameMode.EASY_AI;
             case "vs Hard AI" -> GameMode.HARD_AI;
             default -> GameMode.PLAYER_VS_PLAYER;
+        };
+
+        String[] options2 = { "Weiß", "Schwarz" };
+        String choice2 = (String) JOptionPane.showInputDialog(
+                null,
+                "Wähle deine Farbe: ",
+                "Farbauswahl",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options2,
+                "Weiß");
+
+        playerColor = switch (choice2) {
+            case "Weiß" -> PieceColor.WHITE;
+            case "Schwarz" -> PieceColor.BLACK;
+            default -> PieceColor.WHITE;
         };
     }
 
