@@ -24,6 +24,10 @@ public class King extends Piece {
 
     @Override
     public List<Move> getBasicMoves(Board board, int row, int col) {
+        return getBasicMoves(board, row, col, false);
+    }
+
+    public List<Move> getBasicMoves(Board board, int row, int col, boolean ignoreCastling) {
         List<Move> moves = new ArrayList<>();
         int[] dRow = { -1, -1, -1, 0, 1, 1, 1, 0 };
         int[] dCol = { -1, 0, 1, 1, 1, 0, -1, -1 };
@@ -40,13 +44,11 @@ public class King extends Piece {
             }
         }
 
-        // Castling
-        if (!hasMoved) {
-            // Short castling (kingside)
+        // Castling (nur wenn nicht ignoriert)
+        if (!ignoreCastling && !hasMoved) {
             if (canCastle(board, row, col, true)) {
                 moves.add(new Move(row, col, row, col + 2)); // King moves two right
             }
-            // Long castling (queenside)
             if (canCastle(board, row, col, false)) {
                 moves.add(new Move(row, col, row, col - 2)); // King moves two left
             }

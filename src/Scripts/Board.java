@@ -203,12 +203,20 @@ public class Board {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Piece piece = getPiece(row, col);
-                if (piece != null && piece.getColor() == opponent) {
-                    List<Move> moves = piece.getBasicMoves(this, row, col);
-                    for (Move move : moves) {
-                        if (move.toRow == kingPos[0] && move.toCol == kingPos[1]) {
-                            return true;
-                        }
+                if (piece == null || piece.getColor() != opponent) {
+                    continue;
+                }
+                List<Move> moves;
+                if (piece instanceof King) {
+                    King king = (King) piece;
+                    moves = king.getBasicMoves(this, row, col, true);
+                } else {
+                    moves = piece.getBasicMoves(this, row, col);
+                }
+
+                for (Move move : moves) {
+                    if (move.toRow == kingPos[0] && move.toCol == kingPos[1]) {
+                        return true;
                     }
                 }
             }
