@@ -1,13 +1,10 @@
 package Scripts;
 
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import AI.RandomAI;
 import Pieces.*;
-
 import UI.GUI;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 public class Game {
     private GUI gui;
@@ -15,8 +12,7 @@ public class Game {
 
     private Piece selectedPiece;
     private int[] selectedPiecePosition;
-    private List<Piece> allPieces;
-
+                
     private PieceColor atTurn;
     private PieceColor playerColor;
     private GameMode gameMode;

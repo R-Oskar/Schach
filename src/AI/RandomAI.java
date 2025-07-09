@@ -1,14 +1,13 @@
 package AI;
 
+import Pieces.Piece;
+import Pieces.PieceColor;
+import Scripts.Board;
+import Scripts.Move;
 import java.util.List;
 import java.util.Random;
 
-import Scripts.Board;
-import Scripts.Move;
-import Pieces.Piece;
-import Pieces.PieceColor;
-
-public class RandomAI {
+public class RandomAI extends AbstractAI{
     public static Move randomMove(Board board, PieceColor atTurn) {
         int row, col;
         Piece piece = null;

@@ -1,10 +1,9 @@
 package Scripts;
 
+import Pieces.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import Pieces.*;
 
 public class Board {
     public final static int BOARD_SIZE = 8;
@@ -59,7 +58,7 @@ public class Board {
     }
 
     public List<Piece> getPieces() {
-        List<Piece> pieces = new ArrayList<Piece>();
+        List<Piece> pieces = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Piece piece = board[i][j];
