@@ -18,17 +18,15 @@ public class Game {
 
     private PieceColor atTurn;
 
-
     public Game(GUI gui) {
         board = new Board();
         atTurn = PieceColor.WHITE;
         selectedPiecePosition = new int[2];
         this.gui = gui;
-        
+
     }
 
     public void squareClicked(int row, int col) {
-        System.out.println("Row: " + row + " | Col: " + col);
 
         Piece target = board.getPiece(row, col);
 
@@ -38,7 +36,6 @@ public class Game {
             selectedPiece = target;
             selectedPiecePosition[0] = row;
             selectedPiecePosition[1] = col;
-            System.out.println("Piece selected");
 
             List<Move> legalMoves = board.getLegalMoves(selectedPiecePosition[0], selectedPiecePosition[1]);
 
@@ -46,8 +43,6 @@ public class Game {
             gui.repaint();
 
         } else if (selectedPiece != null) {
-
-
 
             List<Move> legalMoves = board.getLegalMoves(selectedPiecePosition[0], selectedPiecePosition[1]);
 
@@ -79,14 +74,6 @@ public class Game {
 
         promotion(move.toRow, move.toCol);
 
-        if (board.isCheckmate(atTurn)) {
-            JOptionPane.showMessageDialog(null, "Schachmatt: " + atTurn.switchColor() +
-                    " hat gewonnen");
-        }
-        if (board.isStalemate(atTurn)) {
-            JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
-        }
-
         if (move.moveType == MoveType.EN_PASSANT || move.moveType == MoveType.CAPTURE) {
             UI.SoundPlayer.play("src\\UI\\capture.wav");
         } else {
@@ -95,6 +82,14 @@ public class Game {
 
         selectedPiece = null;
         atTurn = atTurn.switchColor();
+
+        if (board.isCheckmate(atTurn)) {
+            JOptionPane.showMessageDialog(null, "Schachmatt: " + atTurn.switchColor() +
+                    " hat gewonnen");
+        }
+        if (board.isStalemate(atTurn)) {
+            JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
+        }
     }
 
     private void promotion(int row, int col) {
