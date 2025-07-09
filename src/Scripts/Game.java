@@ -29,7 +29,7 @@ public class Game {
     }
 
     public void AIMove() {
-        if (board.getAtTurn() == playerColor) {
+        if (board.getAtTurn() == playerColor || gameMode == GameMode.PLAYER_VS_PLAYER) {
             return;
         }
         move(AI.getMove(board, playerColor.switchColor(), gameMode));
@@ -64,6 +64,8 @@ public class Game {
                     break;
                 }
             }
+            selectedPiece = null;
+            gui.clearAvailableMoves();
         }
         if (gameMode != GameMode.PLAYER_VS_PLAYER) {
             AIMove();
@@ -93,7 +95,6 @@ public class Game {
             UI.SoundPlayer.play("src\\UI\\move-self.wav");
         }
 
-        selectedPiece = null;
         board.switchTurn();
         gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
