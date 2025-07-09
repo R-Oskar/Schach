@@ -1,5 +1,5 @@
 package Scripts;
 
 public enum GameMode {
-    PLAYER_VS_PLAYER, EASY_AI, HARD_AI
+    PLAYER_VS_PLAYER, RANDOM_AI, EASY_AI, HARD_AI
 }

@@ -27,7 +27,14 @@ public class Game {
         atTurn = PieceColor.WHITE;
         selectedPiecePosition = new int[2];
         this.gui = gui;
+        AIMove();
+    }
 
+    public void AIMove() {
+        if (gameMode == GameMode.RANDOM_AI && atTurn != playerColor) {
+            Move move = RandomAI.randomMove(board, playerColor.switchColor());
+            move(move);
+        }
     }
 
     public void squareClicked(int row, int col) {
@@ -60,11 +67,8 @@ public class Game {
                 }
             }
         }
-
-        if (gameMode == GameMode.EASY_AI && atTurn != playerColor) {
-            Move move = RandomAI.randomMove(board, playerColor.switchColor());
-            move(move);
-            System.out.println(move);
+        if (gameMode != GameMode.PLAYER_VS_PLAYER) {
+            AIMove();
         }
     }
 
@@ -73,7 +77,7 @@ public class Game {
             move.moveType = MoveType.CAPTURE;
         }
 
-        board.movePiece(new Move(move.fromRow, move.fromCol, move.toRow, move.toCol));
+        board.movePiece(move);
 
         if (selectedPiece instanceof Rook) {
             ((Rook) selectedPiece).setHasMoved(true);
@@ -140,7 +144,7 @@ public class Game {
     }
 
     public void gameModeSelection() {
-        String[] options = { "Player vs Player", "vs Easy AI", "vs Hard AI" };
+        String[] options = { "Player vs Player", "vs random AI", "vs Easy AI", "vs Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,
                 "Wähle deinen Spielmodus: ",
@@ -154,6 +158,7 @@ public class Game {
             case "Player vs Player" -> GameMode.PLAYER_VS_PLAYER;
             case "vs Easy AI" -> GameMode.EASY_AI;
             case "vs Hard AI" -> GameMode.HARD_AI;
+            case "vs random AI" -> GameMode.RANDOM_AI;
             default -> GameMode.PLAYER_VS_PLAYER;
         };
 
