@@ -31,4 +31,8 @@ public class Knight extends Piece {
 
         return moves;
     }
+
+     public char getFen(){
+        return (color == PieceColor.WHITE) ? 'N' : 'n';
+    }
 }

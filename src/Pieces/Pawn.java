@@ -54,4 +54,8 @@ public class Pawn extends Piece {
 
         return moves;
     }
+
+     public char getFen(){
+        return (color == PieceColor.WHITE) ? 'P' : 'p';
+    }
 }

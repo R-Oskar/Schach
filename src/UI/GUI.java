@@ -22,10 +22,9 @@ public class GUI extends JFrame {
 
     public GUI() {
         game = new Game(this);
-
+        setTitle("Weiß ist am Zug");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        setTitle("Schach");
         setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
 
         JPanel panel = new JPanel() {
