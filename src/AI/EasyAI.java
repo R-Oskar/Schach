@@ -9,19 +9,12 @@ public class EasyAI extends AbstractAI {
 
     @Override
     public Move getMove(Board board, PieceColor atTurn) {
-        int row, col;
-        Piece piece = null;
-        Random rand = new Random();
+        List<Move> allMoves = this.getallMoves(board, atTurn);
+        if (allMoves.isEmpty()) {
+            System.err.print("EasyAI: No legal moves available for " + atTurn + "\n");
+            return null; // No legal moves available
+        }
+        return allMoves.get(new Random().nextInt(allMoves.size()));
+    }
 
-        while (true) {
-            row = rand.nextInt(8);
-            col = rand.nextInt(8);
-            piece = board.getPiece(row, col);
-
-            if (piece != null && piece.getColor() == atTurn) {
-                List<Move> moves = board.getLegalMoves(row, col);
-                if (!moves.isEmpty()) {
-                    return moves.get(rand.nextInt(moves.size()));
-                }
 }
-        }}}

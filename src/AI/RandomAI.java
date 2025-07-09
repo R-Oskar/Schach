@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class RandomAI extends AbstractAI{
-    public static Move randomMove(Board board, PieceColor atTurn) {
+    @Override
+    public Move getMove(Board board, PieceColor atTurn) {
         int row, col;
         Piece piece = null;
         Random rand = new Random();

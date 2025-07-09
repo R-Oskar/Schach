@@ -28,7 +28,8 @@ public class Game {
 
     public void AIMove() {
         if (gameMode == GameMode.RANDOM_AI && atTurn != playerColor) {
-            Move move = RandomAI.randomMove(board, playerColor.switchColor());
+            RandomAI randomAI = new RandomAI();
+            Move move = randomAI.getMove(board, playerColor.switchColor());
             move(move);
         }
     }
