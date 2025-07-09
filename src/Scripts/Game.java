@@ -25,14 +25,54 @@ public class Game {
 
         selectedPiecePosition = new int[2];
         this.gui = gui;
-        AIMove();
+        if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
+            AIMove();
+        }
+
     }
 
     public void AIMove() {
-        if (board.getAtTurn() == playerColor || gameMode == GameMode.PLAYER_VS_PLAYER) {
-            return;
-        }
-        move(AI.getMove(board, playerColor.switchColor(), gameMode));
+        // Titel-Animations-Thread starten
+        final boolean[] thinking = { true };
+
+        Thread animationThread = new Thread(() -> {
+            String baseTitle = "Die KI denkt nach";
+            String[] dots = { ".", "..", "..." };
+            int index = 0;
+
+            while (thinking[0]) {
+                final String title = baseTitle + dots[index % dots.length];
+                javax.swing.SwingUtilities.invokeLater(() -> gui.setTitle(title));
+                index++;
+
+                try {
+                    Thread.sleep(200); // Geschwindigkeit der Punkte
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        animationThread.start();
+
+        // KI-Berechnung in separatem Thread
+        new Thread(() -> {
+            try {
+                Thread.sleep(200); // optionaler Delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Move aiMove = AI.getMove(board, playerColor.switchColor(), gameMode);
+
+            // Animation stoppen
+            thinking[0] = false;
+
+            // Zurück in den EDT, um Zug auszuführen und Titel zurückzusetzen
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                move(aiMove);
+                gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
+            });
+        }).start();
     }
 
     public void squareClicked(int row, int col) {
@@ -65,10 +105,6 @@ public class Game {
                 }
             }
             selectedPiece = null;
-            gui.clearAvailableMoves();
-        }
-        if (gameMode != GameMode.PLAYER_VS_PLAYER) {
-            AIMove();
         }
     }
 
@@ -99,7 +135,9 @@ public class Game {
         if (board.isStalemate(board.getAtTurn())) {
             JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
         }
-
+        if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
+            AIMove();
+        }
         gui.repaint();
     }
 
