@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import AI.RandomAI;
 import Pieces.*;
 
 import UI.GUI;
@@ -17,6 +18,7 @@ public class Game {
     private List<Piece> allPieces;
 
     private PieceColor atTurn;
+    private PieceColor playerColor;
     private GameMode gameMode;
 
     public Game(GUI gui) {
@@ -54,9 +56,15 @@ public class Game {
                         board.deleteEnPassant();
                     }
                     move(move);
-                    return;
+                    break;
                 }
             }
+        }
+
+        if (gameMode == GameMode.EASY_AI && atTurn != playerColor) {
+            Move move = RandomAI.randomMove(board, playerColor.switchColor());
+            move(move);
+            System.out.println(move);
         }
     }
 
@@ -64,7 +72,8 @@ public class Game {
         if (board.getPiece(move.toRow, move.toCol) != null) {
             move.moveType = MoveType.CAPTURE;
         }
-        board.movePiece(new Move(selectedPiecePosition[0], selectedPiecePosition[1], move.toRow, move.toCol));
+
+        board.movePiece(new Move(move.fromRow, move.fromCol, move.toRow, move.toCol));
 
         if (selectedPiece instanceof Rook) {
             ((Rook) selectedPiece).setHasMoved(true);
@@ -92,6 +101,8 @@ public class Game {
         if (board.isStalemate(atTurn)) {
             JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
         }
+
+        gui.repaint();
     }
 
     private void promotion(int row, int col) {
@@ -129,7 +140,7 @@ public class Game {
     }
 
     public void gameModeSelection() {
-        String[] options = { "Player vs Player", "vs Easy AI", "vs Hard AI"};
+        String[] options = { "Player vs Player", "vs Easy AI", "vs Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,
                 "Wähle deinen Spielmodus: ",
@@ -145,6 +156,24 @@ public class Game {
             case "vs Hard AI" -> GameMode.HARD_AI;
             default -> GameMode.PLAYER_VS_PLAYER;
         };
-    }
 
+        if (gameMode == GameMode.PLAYER_VS_PLAYER) {
+            return;
+        }
+        String[] options2 = { "Weiß", "Schwarz" };
+        String choice2 = (String) JOptionPane.showInputDialog(
+                null,
+                "Wähle deine Farbe: ",
+                "Farbauswahl",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options2,
+                "Weiß");
+
+        playerColor = switch (choice2) {
+            case "Weiß" -> PieceColor.WHITE;
+            case "Schwarz" -> PieceColor.BLACK;
+            default -> PieceColor.WHITE;
+        };
+    }
 }
