@@ -10,14 +10,25 @@ public class Board {
     private Piece[][] board;
     private Move lastMove;
 
-    private String castlingRights = "KQkq";
+    private String castlingRights;
+    private PieceColor atTurn;
 
-    public String getCastlingRights(){
+    public String getCastlingRights() {
         return castlingRights;
     }
 
     public Board() {
         board = setupInitialPosition();
+        atTurn = PieceColor.WHITE;
+        castlingRights = "KQkq";
+    }
+
+    public void switchTurn(){
+        atTurn = atTurn.switchColor();
+    }
+
+    public PieceColor getAtTurn() {
+        return atTurn;
     }
 
     public Piece[][] getBoard() {

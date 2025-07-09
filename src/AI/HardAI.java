@@ -7,13 +7,13 @@ import Pieces.*;
 public class HardAI extends AbstractAI {
 
     @Override
-    public Move getMove(Game game, Board board, PieceColor atTurn) {
+    public Move getMove(Board board, PieceColor atTurn) {
         String bestMove = "";
         try {
             StockfishEngine engine = new StockfishEngine();
             if (engine.startEngine(
                     "src\\AI\\stockfish-windows-x86-64-avx2\\stockfish\\stockfish-windows-x86-64-avx2.exe")) {
-                bestMove = engine.getBestMove(boardToFEN(game, board, atTurn), 15);
+                bestMove = engine.getBestMove(boardToFEN(board, atTurn), 15);
                 engine.stopEngine();
             }
         } catch (Exception e) {
@@ -36,7 +36,7 @@ public class HardAI extends AbstractAI {
         return new Move(fromRow, fromCol, toRow, toCol);
     }
 
-    public static String boardToFEN(Game game, Board board, PieceColor atTurn) {
+    public static String boardToFEN( Board board, PieceColor atTurn) {
         StringBuilder fen = new StringBuilder();
 
         for (int row = 0; row < 8; row++) {

@@ -15,34 +15,29 @@ public class Game {
 
     private Piece selectedPiece;
     private int[] selectedPiecePosition;
-    
-
                 
-    private PieceColor atTurn;
+
     private PieceColor playerColor;
     private GameMode gameMode;
 
     public Game(GUI gui) {
         gameModeSelection();
         board = new Board();
-        atTurn = PieceColor.WHITE;
+        
         selectedPiecePosition = new int[2];
         this.gui = gui;
         AIMove();
     }
 
-    public PieceColor getAtTurn(){
-        return atTurn;
-    }
 
     public void AIMove() {
-        if (gameMode == GameMode.RANDOM_AI && atTurn != playerColor) {
+        if (gameMode == GameMode.RANDOM_AI && board.getAtTurn() != playerColor) {
             RandomAI randomAI = new RandomAI();
-            Move move = randomAI.getMove(this, board, playerColor.switchColor());
+            Move move = randomAI.getMove(board, playerColor.switchColor());
             move(move);
-        } else if (gameMode == GameMode.HARD_AI && atTurn != playerColor) {
+        } else if (gameMode == GameMode.HARD_AI && board.getAtTurn()  != playerColor) {
             HardAI hardAi = new HardAI();
-            Move move = hardAi.getMove(this, board, playerColor.switchColor());
+            Move move = hardAi.getMove(board, playerColor.switchColor());
             move(move);
         } 
     }
@@ -51,7 +46,7 @@ public class Game {
 
         Piece target = board.getPiece(row, col);
 
-        if ((target != null) && ((selectedPiece == null && target.getColor() == atTurn)
+        if ((target != null) && ((selectedPiece == null && target.getColor() == board.getAtTurn() )
                 || (selectedPiece != null && selectedPiece.getColor() == target.getColor()))) {
 
             selectedPiece = target;
@@ -106,14 +101,14 @@ public class Game {
         }
 
         selectedPiece = null;
-        atTurn = atTurn.switchColor();
-        gui.setTitle((atTurn == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
+        board.switchTurn();
+        gui.setTitle((board.getAtTurn()  == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
-        if (board.isCheckmate(atTurn)) {
-            JOptionPane.showMessageDialog(null, "Schachmatt: " + atTurn.switchColor() +
+        if (board.isCheckmate(board.getAtTurn() )) {
+            JOptionPane.showMessageDialog(null, "Schachmatt: " + board.getAtTurn() .switchColor() +
                     " hat gewonnen");
         }
-        if (board.isStalemate(atTurn)) {
+        if (board.isStalemate(board.getAtTurn() )) {
             JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
         }
 
