@@ -68,11 +68,11 @@ public class StockfishEngine {
 
         // Append remaining FEN fields
         fen.append(" ")
-                .append((atTurn == PieceColor.WHITE) ? "w" : "b") // 'w' or 'b'
+                .append((atTurn == PieceColor.WHITE) ? "w" : "b")
                 .append(" ")
-                .append(board.getCastlingRights()) // e.g., "KQkq" or "-"
+                .append(board.getCastlingRights())
                 .append(" ")
-                .append("-") // e.g., "e3" or "-"
+                .append("-") 
                 .append(" ")
                 .append("25") // halfmove clock (e.g., for 50-move rule)
                 .append(" ")
