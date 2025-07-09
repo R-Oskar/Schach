@@ -24,6 +24,8 @@ abstract public class Piece implements Cloneable {
         return symbol;
     }
 
+    public abstract char getFen();
+
     @Override
     public Piece clone() {
 

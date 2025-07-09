@@ -10,8 +10,18 @@ public class Board {
     private Piece[][] board;
     private Move lastMove;
 
+    private String castlingRights = "KQkq";
+
+    public String getCastlingRights(){
+        return castlingRights;
+    }
+
     public Board() {
         board = setupInitialPosition();
+    }
+
+    public Piece[][] getBoard() {
+        return board;
     }
 
     public static Piece[][] setupInitialPosition() {
@@ -93,8 +103,12 @@ public class Board {
     public void movePiece(Move move) {
         Piece piece = getPiece(move.fromRow, move.fromCol);
 
+        // Assume castlingRights is a field or accessible variable
+        // Example: castlingRights = "KQkq";
+
         if (piece instanceof King && Math.abs(move.toCol - move.fromCol) == 2) {
             int row = move.fromRow;
+
             if (move.toCol == 6) { // Short castling
                 setPiece(row, 6, piece);
                 setPiece(row, 4, null);
@@ -103,6 +117,14 @@ public class Board {
                 setPiece(row, 7, null);
                 if (rook instanceof Rook)
                     ((Rook) rook).setHasMoved(true);
+
+                // Remove castling right (K or k)
+                if (piece.getColor() == PieceColor.WHITE) {
+                    castlingRights = castlingRights.replace("K", "");
+                } else {
+                    castlingRights = castlingRights.replace("k", "");
+                }
+
             } else if (move.toCol == 2) { // Long castling
                 setPiece(row, 2, piece);
                 setPiece(row, 4, null);
@@ -111,10 +133,24 @@ public class Board {
                 setPiece(row, 0, null);
                 if (rook instanceof Rook)
                     ((Rook) rook).setHasMoved(true);
+
+                // Remove castling right (Q or q)
+                if (piece.getColor() == PieceColor.WHITE) {
+                    castlingRights = castlingRights.replace("Q", "");
+                } else {
+                    castlingRights = castlingRights.replace("q", "");
+                }
             }
+
             if (piece instanceof King)
                 ((King) piece).setHasMoved(true);
+
             lastMove = move;
+
+            // Optional: If no rights left, replace with "-"
+            if (castlingRights.isEmpty())
+                castlingRights = "-";
+
             return;
         }
 

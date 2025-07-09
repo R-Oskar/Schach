@@ -3,13 +3,14 @@ package AI;
 import Pieces.Piece;
 import Pieces.PieceColor;
 import Scripts.Board;
+import Scripts.Game;
 import Scripts.Move;
 import java.util.List;
 import java.util.Random;
 
 public class RandomAI extends AbstractAI{
     @Override
-    public Move getMove(Board board, PieceColor atTurn) {
+    public Move getMove(Game game, Board board, PieceColor atTurn) {
         int row, col;
         Piece piece = null;
         Random rand = new Random();

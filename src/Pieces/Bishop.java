@@ -16,4 +16,8 @@ public class Bishop extends Piece {
         int[] dCol = { -1, 1, -1, 1 };
         return getSlidingMoves(board, row, col, dRow, dCol);
     }
+
+    public char getFen(){
+        return (color == PieceColor.WHITE) ? 'B' : 'b';
+    }
 }

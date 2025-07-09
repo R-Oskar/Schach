@@ -1,5 +1,6 @@
 package Scripts;
 
+import AI.HardAI;
 import AI.RandomAI;
 import Pieces.*;
 import UI.GUI;
@@ -12,6 +13,8 @@ public class Game {
 
     private Piece selectedPiece;
     private int[] selectedPiecePosition;
+    
+
                 
     private PieceColor atTurn;
     private PieceColor playerColor;
@@ -29,9 +32,13 @@ public class Game {
     public void AIMove() {
         if (gameMode == GameMode.RANDOM_AI && atTurn != playerColor) {
             RandomAI randomAI = new RandomAI();
-            Move move = randomAI.getMove(board, playerColor.switchColor());
+            Move move = randomAI.getMove(this, board, playerColor.switchColor());
             move(move);
-        }
+        } else if (gameMode == GameMode.HARD_AI && atTurn != playerColor) {
+            HardAI hardAi = new HardAI();
+            Move move = hardAi.getMove(this, board, playerColor.switchColor());
+            move(move);
+        } 
     }
 
     public void squareClicked(int row, int col) {

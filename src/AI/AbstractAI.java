@@ -6,11 +6,12 @@ import java.util.List;
 import Pieces.Piece;
 import Pieces.PieceColor;
 import Scripts.Board;
+import Scripts.Game;
 import Scripts.Move;
 
 abstract public class AbstractAI {
 
-    public abstract Move getMove(Board board, PieceColor atTurn);
+    public abstract Move getMove(Game game, Board board, PieceColor atTurn);
     
     public static List<Move> getallMoves(Board board, PieceColor atTurn) {
         List<Move> allLegalMoves = new ArrayList<Move>();

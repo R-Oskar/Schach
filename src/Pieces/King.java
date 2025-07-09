@@ -18,6 +18,10 @@ public class King extends Piece {
         return hasMoved;
     }
 
+    public char getFen(){
+        return (color == PieceColor.WHITE) ? 'K' : 'k';
+    }
+
     public void setHasMoved(boolean moved) {
         this.hasMoved = moved;
     }

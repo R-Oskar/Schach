@@ -38,4 +38,8 @@ public class Rook extends Piece {
         cloned.hasMoved = this.hasMoved;
         return cloned;
     }
+
+    public char getFen() {
+        return (color == PieceColor.WHITE) ? 'R' : 'r';
+    }
 }
