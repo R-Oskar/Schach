@@ -9,7 +9,7 @@ public class EasyAI extends AbstractAI {
 
     @Override
     public Move getMove(Board board, PieceColor atTurn) {
-        List<Move> allMoves = this.getallMoves(board, atTurn);
+        List<Move> allMoves = getallMoves(board, atTurn);
         if (allMoves.isEmpty()) {
             System.err.print("EasyAI: No legal moves available for " + atTurn + "\n");
             return null; // No legal moves available
