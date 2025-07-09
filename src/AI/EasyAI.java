@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 public class EasyAI extends AbstractAI {
-    public static Move randomMove(Board board, PieceColor atTurn) {
+
+    @Override
+    public Move getMove(Board board, PieceColor atTurn) {
         int row, col;
         Piece piece = null;
         Random rand = new Random();
@@ -21,7 +23,5 @@ public class EasyAI extends AbstractAI {
                 if (!moves.isEmpty()) {
                     return moves.get(rand.nextInt(moves.size()));
                 }
-            }
-        }
-    }
 }
+        }}}
