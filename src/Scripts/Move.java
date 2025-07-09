@@ -19,11 +19,18 @@ public class Move {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Move other)) return false;
+        if (!(o instanceof Move other))
+            return false;
         return this.fromRow == other.fromRow &&
-               this.fromCol == other.fromCol &&
-               this.toRow == other.toRow &&
-               this.toCol == other.toCol &&
-               this.moveType == other.moveType;
+                this.fromCol == other.fromCol &&
+                this.toRow == other.toRow &&
+                this.toCol == other.toCol &&
+                this.moveType == other.moveType;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Move[from=(%d,%d), to=(%d,%d), type=%s]",
+                fromRow, fromCol, toRow, toCol, moveType);
     }
 }
