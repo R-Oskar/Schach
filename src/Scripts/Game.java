@@ -105,6 +105,7 @@ public class Game {
                 }
             }
             selectedPiece = null;
+            gui.clearAvailableMoves();
         }
     }
 
