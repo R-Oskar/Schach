@@ -14,14 +14,17 @@ public class Game {
 
     private Piece selectedPiece;
     private int[] selectedPiecePosition;
+    private List<Piece> allPieces;
 
     private PieceColor atTurn;
+
 
     public Game(GUI gui) {
         board = new Board();
         atTurn = PieceColor.WHITE;
         selectedPiecePosition = new int[2];
         this.gui = gui;
+        
     }
 
     public void squareClicked(int row, int col) {
@@ -36,11 +39,16 @@ public class Game {
             selectedPiecePosition[0] = row;
             selectedPiecePosition[1] = col;
             System.out.println("Piece selected");
+
             List<Move> legalMoves = board.getLegalMoves(selectedPiecePosition[0], selectedPiecePosition[1]);
+
             gui.showMoveHints(legalMoves);
             gui.repaint();
 
         } else if (selectedPiece != null) {
+
+
+
             List<Move> legalMoves = board.getLegalMoves(selectedPiecePosition[0], selectedPiecePosition[1]);
 
             for (Move move : legalMoves) {

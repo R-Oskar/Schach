@@ -58,6 +58,19 @@ public class Board {
         board[row][col] = piece;
     }
 
+    public List<Piece> getPieces(){
+        List<Piece> pieces = new ArrayList<Piece>();
+        for(int i = 0; i<8; i++){
+            for (int j = 0; j<8; j++){
+                Piece piece = board[i][j];
+                if (piece != null){
+                    pieces.add(piece);
+                }
+            }
+        }
+        return pieces;
+    }
+
     public List<Move> getLegalMoves(int row, int col) {
         Piece piece = getPiece(row, col);
         if (piece == null)
@@ -72,7 +85,7 @@ public class Board {
             copy.setPiece(move.fromRow, move.fromCol, null);
 
             if (!copy.isInCheck(piece.getColor())) {
-                legalMoves.add(move);
+              legalMoves.add(move);
             }
         }
         return legalMoves;
@@ -124,9 +137,7 @@ public class Board {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Piece piece = this.getPiece(row, col);
-                if (piece != null) {
-                    newBoard.setPiece(row, col, piece.clone());
-                }
+                newBoard.setPiece(row, col, piece);
             }
         }
 
@@ -181,9 +192,10 @@ public class Board {
 
     public boolean isInCheck(PieceColor color) {
         int[] kingPos = findKingPosition(color);
+
         if (kingPos == null)
             return false; // Kein König vorhanden → kein Schach
-
+        System.out.println("Searched for " + color + " King, found at row: " + kingPos[0] + ", col: " + kingPos[1]);
         // Gegnerische Farbe
         PieceColor opponent = (color == PieceColor.WHITE) ? PieceColor.BLACK : PieceColor.WHITE;
 
@@ -216,4 +228,5 @@ public class Board {
         }
         return null; // König nicht gefunden
     }
+    
 }

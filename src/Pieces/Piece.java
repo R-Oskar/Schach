@@ -26,6 +26,7 @@ abstract public class Piece implements Cloneable {
 
     @Override
     public Piece clone() {
+
         try {
             return (Piece) super.clone();
         } catch (CloneNotSupportedException e) {
