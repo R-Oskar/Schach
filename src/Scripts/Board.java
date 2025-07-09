@@ -23,7 +23,7 @@ public class Board {
         castlingRights = "KQkq";
     }
 
-    public void switchTurn(){
+    public void switchTurn() {
         atTurn = atTurn.switchColor();
     }
 
@@ -114,8 +114,19 @@ public class Board {
     public void movePiece(Move move) {
         Piece piece = getPiece(move.fromRow, move.fromCol);
 
-        // Assume castlingRights is a field or accessible variable
-        // Example: castlingRights = "KQkq";
+        if (piece instanceof King) {
+            removeCastlingRights(atTurn);
+        }
+
+        if (piece instanceof Rook) {
+            boolean isWhite = piece.getColor() == PieceColor.WHITE;
+
+            if (move.fromCol == 7) {
+                castlingRights = castlingRights.replace(isWhite ? "K" : "k", "");
+            } else if (move.fromCol == 0) {
+                castlingRights = castlingRights.replace(isWhite ? "Q" : "q", "");
+            }
+        }
 
         if (piece instanceof King && Math.abs(move.toCol - move.fromCol) == 2) {
             int row = move.fromRow;
@@ -126,15 +137,6 @@ public class Board {
                 Piece rook = getPiece(row, 7);
                 setPiece(row, 5, rook);
                 setPiece(row, 7, null);
-                if (rook instanceof Rook)
-                    ((Rook) rook).setHasMoved(true);
-
-                // Remove castling right (K or k)
-                if (piece.getColor() == PieceColor.WHITE) {
-                    castlingRights = castlingRights.replace("K", "");
-                } else {
-                    castlingRights = castlingRights.replace("k", "");
-                }
 
             } else if (move.toCol == 2) { // Long castling
                 setPiece(row, 2, piece);
@@ -142,23 +144,10 @@ public class Board {
                 Piece rook = getPiece(row, 0);
                 setPiece(row, 3, rook);
                 setPiece(row, 0, null);
-                if (rook instanceof Rook)
-                    ((Rook) rook).setHasMoved(true);
 
-                // Remove castling right (Q or q)
-                if (piece.getColor() == PieceColor.WHITE) {
-                    castlingRights = castlingRights.replace("Q", "");
-                } else {
-                    castlingRights = castlingRights.replace("q", "");
-                }
             }
 
-            if (piece instanceof King)
-                ((King) piece).setHasMoved(true);
-
             lastMove = move;
-
-            // Optional: If no rights left, replace with "-"
             if (castlingRights.isEmpty())
                 castlingRights = "-";
 
@@ -175,6 +164,13 @@ public class Board {
         setPiece(move.toRow, move.toCol, piece);
         setPiece(move.fromRow, move.fromCol, null);
         lastMove = move;
+    }
+
+    public void removeCastlingRights(PieceColor color) {
+        String rightsToRemove = color == PieceColor.WHITE ? "KQ" : "kq";
+        for (char c : rightsToRemove.toCharArray()) {
+            castlingRights = castlingRights.replace(String.valueOf(c), "");
+        }
     }
 
     public Board copy() {

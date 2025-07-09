@@ -79,12 +79,6 @@ public class Game {
 
         board.movePiece(move);
 
-        if (selectedPiece instanceof Rook) {
-            ((Rook) selectedPiece).setHasMoved(true);
-        } else if (selectedPiece instanceof King) {
-            ((King) selectedPiece).setHasMoved(true);
-        }
-
         gui.clearAvailableMoves();
 
         promotion(move.toRow, move.toCol);
