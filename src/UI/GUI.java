@@ -3,6 +3,7 @@ package UI;
 import javax.swing.*;
 
 import Pieces.Piece;
+import Pieces.PieceColor;
 import Scripts.Board;
 import Scripts.Game;
 import Scripts.Move;
@@ -22,10 +23,9 @@ public class GUI extends JFrame {
 
     public GUI() {
         game = new Game(this);
-
+        setTitle((game.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        setTitle("Schach");
         setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
 
         JPanel panel = new JPanel() {

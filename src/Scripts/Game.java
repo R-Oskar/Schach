@@ -5,6 +5,8 @@ import AI.RandomAI;
 import Pieces.*;
 import UI.GUI;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 public class Game {
@@ -27,6 +29,10 @@ public class Game {
         selectedPiecePosition = new int[2];
         this.gui = gui;
         AIMove();
+    }
+
+    public PieceColor getAtTurn(){
+        return atTurn;
     }
 
     public void AIMove() {
@@ -101,6 +107,7 @@ public class Game {
 
         selectedPiece = null;
         atTurn = atTurn.switchColor();
+        gui.setTitle((atTurn == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
         if (board.isCheckmate(atTurn)) {
             JOptionPane.showMessageDialog(null, "Schachmatt: " + atTurn.switchColor() +
@@ -148,21 +155,22 @@ public class Game {
     }
 
     public void gameModeSelection() {
-        String[] options = { "Player vs Player", "vs random AI", "vs Easy AI", "vs Hard AI" };
+        ImageIcon icon = new ImageIcon("src\\UI\\Icon.png");
+        String[] options = { "Player vs Player", "Random AI", "Easy AI", "Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,
                 "Wähle deinen Spielmodus: ",
                 "Spielmodusauswahl",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                icon,
                 options,
                 "Player vs Player");
 
         gameMode = switch (choice) {
             case "Player vs Player" -> GameMode.PLAYER_VS_PLAYER;
-            case "vs Easy AI" -> GameMode.EASY_AI;
-            case "vs Hard AI" -> GameMode.HARD_AI;
-            case "vs random AI" -> GameMode.RANDOM_AI;
+            case "Easy AI" -> GameMode.EASY_AI;
+            case "Hard AI" -> GameMode.HARD_AI;
+            case "Random AI" -> GameMode.RANDOM_AI;
             default -> GameMode.PLAYER_VS_PLAYER;
         };
 
@@ -175,7 +183,7 @@ public class Game {
                 "Wähle deine Farbe: ",
                 "Farbauswahl",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                icon,
                 options2,
                 "Weiß");
 

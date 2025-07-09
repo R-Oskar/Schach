@@ -14,7 +14,6 @@ public class HardAI extends AbstractAI {
             if (engine.startEngine(
                     "src\\AI\\stockfish-windows-x86-64-avx2\\stockfish\\stockfish-windows-x86-64-avx2.exe")) {
                 bestMove = engine.getBestMove(boardToFEN(game, board, atTurn), 15);
-                System.out.println("Best move: " + bestMove);
                 engine.stopEngine();
             }
         } catch (Exception e) {
