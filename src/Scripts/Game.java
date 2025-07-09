@@ -1,7 +1,5 @@
 package Scripts;
 
-import AI.HardAI;
-import AI.RandomAI;
 import Pieces.*;
 import UI.GUI;
 import java.util.List;
@@ -9,13 +7,14 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import AIs.AI;
+
 public class Game {
     private GUI gui;
     private Board board;
 
     private Piece selectedPiece;
     private int[] selectedPiecePosition;
-                
 
     private PieceColor playerColor;
     private GameMode gameMode;
@@ -23,30 +22,24 @@ public class Game {
     public Game(GUI gui) {
         gameModeSelection();
         board = new Board();
-        
+
         selectedPiecePosition = new int[2];
         this.gui = gui;
         AIMove();
     }
 
-
     public void AIMove() {
-        if (gameMode == GameMode.RANDOM_AI && board.getAtTurn() != playerColor) {
-            RandomAI randomAI = new RandomAI();
-            Move move = randomAI.getMove(board, playerColor.switchColor());
-            move(move);
-        } else if (gameMode == GameMode.HARD_AI && board.getAtTurn()  != playerColor) {
-            HardAI hardAi = new HardAI();
-            Move move = hardAi.getMove(board, playerColor.switchColor());
-            move(move);
-        } 
+        if (board.getAtTurn() == playerColor) {
+            return;
+        }
+        move(AI.getMove(board, playerColor.switchColor(), gameMode));
     }
 
     public void squareClicked(int row, int col) {
 
         Piece target = board.getPiece(row, col);
 
-        if ((target != null) && ((selectedPiece == null && target.getColor() == board.getAtTurn() )
+        if ((target != null) && ((selectedPiece == null && target.getColor() == board.getAtTurn())
                 || (selectedPiece != null && selectedPiece.getColor() == target.getColor()))) {
 
             selectedPiece = target;
@@ -102,13 +95,13 @@ public class Game {
 
         selectedPiece = null;
         board.switchTurn();
-        gui.setTitle((board.getAtTurn()  == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
+        gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
-        if (board.isCheckmate(board.getAtTurn() )) {
-            JOptionPane.showMessageDialog(null, "Schachmatt: " + board.getAtTurn() .switchColor() +
+        if (board.isCheckmate(board.getAtTurn())) {
+            JOptionPane.showMessageDialog(null, "Schachmatt: " + board.getAtTurn().switchColor() +
                     " hat gewonnen");
         }
-        if (board.isStalemate(board.getAtTurn() )) {
+        if (board.isStalemate(board.getAtTurn())) {
             JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
         }
 
@@ -151,7 +144,7 @@ public class Game {
 
     public void gameModeSelection() {
         ImageIcon icon = new ImageIcon("src\\UI\\Icon.png");
-        String[] options = { "Player vs Player", "Random AI", "Easy AI", "Hard AI" };
+        String[] options = { "Player vs Player", "Random AI", "Easy AI", "Mid AI", "Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,
                 "Wähle deinen Spielmodus: ",
@@ -166,6 +159,7 @@ public class Game {
             case "Easy AI" -> GameMode.EASY_AI;
             case "Hard AI" -> GameMode.HARD_AI;
             case "Random AI" -> GameMode.RANDOM_AI;
+            case "Mid AI" -> GameMode.MID_AI;
             default -> GameMode.PLAYER_VS_PLAYER;
         };
 
