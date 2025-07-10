@@ -72,7 +72,7 @@ public class StockfishEngine {
                 .append(" ")
                 .append(board.getCastlingRights())
                 .append(" ")
-                .append("-") 
+                .append("-")
                 .append(" ")
                 .append("25") // halfmove clock (e.g., for 50-move rule)
                 .append(" ")
@@ -81,13 +81,14 @@ public class StockfishEngine {
         return fen.toString();
     }
 
-    public static Move stockFishMove(Board board, PieceColor atTurn, int depth) {
+    public static Move stockFishMove(Board board, PieceColor atTurn, int depth, int schwaeche) {
         String bestMove = "";
         try {
             StockfishEngine engine = new StockfishEngine();
             if (engine.startEngine(
                     "src\\AIs\\stockfish-windows-x86-64-avx2\\stockfish\\stockfish-windows-x86-64-avx2.exe")) {
-                bestMove = engine.getBestMove(boardToFEN(board, atTurn), depth);
+                engine.setMultiPV(schwaeche); // Set MultiPV to 4 for better move analysis
+                bestMove = engine.getBestMove(boardToFEN(board, atTurn), depth, schwaeche);
                 engine.stopEngine();
             }
         } catch (Exception e) {
@@ -101,16 +102,50 @@ public class StockfishEngine {
         writer.flush();
     }
 
-    public String getBestMove(String fen, int depth) throws IOException {
+    public void setMultiPV(int value) throws IOException {
+        sendCommand("setoption name MultiPV value " + value);
+    }
+
+    public String getBestMove(String fen, int depth, int schwaeche) throws IOException, InterruptedException {
         sendCommand("position fen " + fen);
         sendCommand("go depth " + depth);
+
+        String bestMove = null;
         String line;
+
+
+        final boolean [] weitermachen = {true};
+
+        int i = 1;
         while ((line = reader.readLine()) != null) {
-            if (line.startsWith("bestmove")) {
-                return line.split(" ")[1];
+            System.err.println(++i);
+            System.err.println("Stockfish: " + line);
+
+            // Prüfe immer zuerst auf "bestmove"
+            if (line.contains("bestmove")) {
+                return bestMove; // gibt das zuletzt gefundene bestMove zurück
+            }
+
+            boolean reachedDepth = line.startsWith("info depth " + depth);
+
+            if (!reachedDepth) {
+                continue; // Skip lines that do not match the desired depth
+            }
+
+            if (line.contains("multipv 1")) {
+                String[] tokens = line.split(" ");
+                bestMove = tokens[21]; // The best move is at the 22nd token
+            }
+
+            if (line.contains("multipv " + schwaeche)) {
+                String[] tokens = line.split(" ");
+                bestMove = tokens[21]; // The best move is at the 22nd token
+                return bestMove; // Stop after finding the best move for the specified MultiPV
             }
         }
-        return null;
+
+
+        return bestMove;
     }
 
     public void stopEngine() throws IOException {

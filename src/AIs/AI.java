@@ -18,9 +18,9 @@ abstract public class AI {
             case EASY_AI:
                 return getEasyMove(board, atTurn);
             case MID_AI:
-                return StockfishEngine.stockFishMove(board, atTurn, 3);
+                return StockfishEngine.stockFishMove(board, atTurn, 3,4);
             case HARD_AI:
-                return StockfishEngine.stockFishMove(board, atTurn, 20);
+                return StockfishEngine.stockFishMove(board, atTurn, 6,1);
             default:
                 return null;
         }
@@ -34,7 +34,7 @@ abstract public class AI {
             return getRandomMove(board, atTurn);
         }
 
-        return StockfishEngine.stockFishMove(board, atTurn, 5);
+        return StockfishEngine.stockFishMove(board, atTurn, 5,4);
     }
 
     public static Move getRandomMove(Board board, PieceColor atTurn) {
