@@ -154,7 +154,7 @@ public class Game {
                         "Wähle Figur zur Umwandlung:",
                         "Bauernumwandlung",
                         JOptionPane.QUESTION_MESSAGE,
-                        null,
+                        new ImageIcon("src\\UI\\Icon.png"),
                         options,
                         "Dame");
 

@@ -1,7 +1,6 @@
 package UI;
 
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 
 import Pieces.Piece;
@@ -73,18 +72,12 @@ public class GUI extends JFrame {
         muteButton.addActionListener(e -> {
             if (isMuted[0]) {
                 // Sound starten
-                if (backroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                    FloatControl gainControl = (FloatControl) backroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(0);
-                }
+                SoundPlayer.toggleMute(backroundMusic);
                 muteButton.setText("mute");
                 isMuted[0] = false;
             } else {
                 // Sound stoppen
-                if (backroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                    FloatControl gainControl = (FloatControl) backroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(-1000);
-                }
+                SoundPlayer.toggleMute(backroundMusic);
                 muteButton.setText("unmute");
                 isMuted[0] = true;
             }

@@ -29,4 +29,12 @@ public class SoundPlayer {
         }
         return null;
     }
+
+    public static void toggleMute(Clip clip){
+        if(clip.isActive()){
+            clip.stop();
+        } else{
+            clip.start();
+        }
+    }
 }
