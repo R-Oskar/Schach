@@ -1,5 +1,7 @@
 package UI;
 
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 
 import Pieces.Piece;
@@ -19,6 +21,7 @@ public class GUI extends JFrame {
 
     private Game game;
     private List<Move> availableMoves = new ArrayList<>();
+    private Clip backroundMusic;
 
     public GUI() {
         game = new Game(this);
@@ -28,7 +31,7 @@ public class GUI extends JFrame {
         setResizable(false);
         setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
 
-        SoundPlayer.play("src\\UI\\Imperial march.wav", true, -10.0f);
+        backroundMusic = SoundPlayer.play("src\\UI\\Imperial march.wav", true, -10.0f);
 
         // Linkes Panel (Beispiel: Info)
         JPanel leftPanel = new JPanel();
@@ -63,9 +66,30 @@ public class GUI extends JFrame {
 
         JButton muteButton = new JButton("mute");
         muteButton.setPreferredSize(new Dimension(80, 30));
+
+        // Boolean-Flag zum Zustand merken
+        final boolean[] isMuted = { false };
+
         muteButton.addActionListener(e -> {
-            // Sound-Steuerung hier
+            if (isMuted[0]) {
+                // Sound starten
+                if (backroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                    FloatControl gainControl = (FloatControl) backroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
+                    gainControl.setValue(0);
+                }
+                muteButton.setText("mute");
+                isMuted[0] = false;
+            } else {
+                // Sound stoppen
+                if (backroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                    FloatControl gainControl = (FloatControl) backroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
+                    gainControl.setValue(-1000);
+                }
+                muteButton.setText("unmute");
+                isMuted[0] = true;
+            }
         });
+
         rightPanel.add(muteButton);
 
         // Gesamtes Layout: BoxLayout horizontal

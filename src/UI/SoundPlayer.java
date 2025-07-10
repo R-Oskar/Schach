@@ -4,11 +4,11 @@ import javax.sound.sampled.*;
 import java.io.File;
 
 public class SoundPlayer {
-    public static void play(String filePath) {
-        play(filePath, false, 0);
+    public static Clip play(String filePath) {
+        return play(filePath, false, 0);
     }
 
-    public static void play(String filePath, boolean looping, float volumeDb) {
+    public static Clip play(String filePath, boolean looping, float volumeDb) {
         try {
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File(filePath));
             Clip clip = AudioSystem.getClip();
@@ -23,8 +23,10 @@ public class SoundPlayer {
             if (looping) {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
+            return clip;
         } catch (Exception e) {
             System.err.println("Sound konnte nicht abgespielt werden: " + e.getMessage());
         }
+        return null;
     }
 }
