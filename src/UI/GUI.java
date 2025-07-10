@@ -24,12 +24,13 @@ public class GUI extends JFrame {
         game = new Game(this);
         setTitle("Weiß ist am Zug");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(false); // allow resizing
         setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
 
-        SoundPlayer.play("src\\UI\\Imperial march.wav", true, (float) -10.0);
+        SoundPlayer.play("src\\UI\\Imperial march.wav", true, -10.0f);
 
-        JPanel panel = new JPanel() {
+        // Create the chessboard panel
+        JPanel boardPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 drawBoard(g);
@@ -38,20 +39,39 @@ public class GUI extends JFrame {
             }
         };
 
-        panel.addMouseListener(new MouseAdapter() {
+        boardPanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 game.squareClicked(e.getY() / TILE_SIZE, e.getX() / TILE_SIZE);
             }
         });
 
-        add(panel);
-        Dimension d = new Dimension((TILE_SIZE * Board.BOARD_SIZE), (TILE_SIZE * Board.BOARD_SIZE));
-        panel.setSize(d);
-        panel.setMinimumSize(d);
-        panel.setPreferredSize(d);
-        panel.setMaximumSize(d);
+        // Set fixed size for chessboard
+        Dimension boardSize = new Dimension(TILE_SIZE * Board.BOARD_SIZE, TILE_SIZE * Board.BOARD_SIZE);
+        boardPanel.setPreferredSize(boardSize);
+        boardPanel.setMaximumSize(boardSize);
+        boardPanel.setMinimumSize(boardSize);
+
+        // Wrap the boardPanel in a container that centers it
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.add(boardPanel);
+
+        // Set the layout of the main frame
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(centerWrapper, BorderLayout.CENTER);
+
+        // Optional: Add padding around the board
+        centerWrapper.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
         pack();
-        setLocationRelativeTo(null);
+        // Mindestgröße berechnen: Schachbrettgröße + Padding + TopPanel-Höhe
+        int boardPixels = TILE_SIZE * Board.BOARD_SIZE;
+        int extraPaddingForTitleBar = 40;
+        int extraPaddingSideways = 16;
+
+        setSize(new Dimension(boardPixels + extraPaddingSideways + 300, boardPixels + extraPaddingForTitleBar));
+        setResizable(false);
+
+        setLocationRelativeTo(null); // center on screen
     }
 
     private void drawBoard(Graphics g) {
