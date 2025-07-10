@@ -63,27 +63,47 @@ public class GUI extends JFrame {
         rightPanel.setPreferredSize(new Dimension(150, TILE_SIZE * BOARD_SIZE));
         rightPanel.setBackground(Color.LIGHT_GRAY);
 
-        JButton muteButton = new JButton("mute");
+        JButton muteButton = new JButton();
+        ImageIcon originalIcon2 = new ImageIcon(getClass().getResource("/UI/speaker.png"));
+        Image scaledImage2 = originalIcon2.getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon2 = new ImageIcon(scaledImage2);
+        muteButton.setIcon(scaledIcon2);
         muteButton.setPreferredSize(new Dimension(80, 30));
+        muteButton.setFocusPainted(false);
 
         // Boolean-Flag zum Zustand merken
         final boolean[] isMuted = { false };
 
         muteButton.addActionListener(e -> {
+            SoundPlayer.toggleMute(backroundMusic);
             if (isMuted[0]) {
-                // Sound starten
-                SoundPlayer.toggleMute(backroundMusic);
-                muteButton.setText("mute");
+                ImageIcon originalIcon = new ImageIcon(getClass().getResource("/UI/speaker.png"));
+                Image scaledImage = originalIcon.getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                muteButton.setIcon(scaledIcon);
+
                 isMuted[0] = false;
             } else {
-                // Sound stoppen
-                SoundPlayer.toggleMute(backroundMusic);
-                muteButton.setText("unmute");
+                ImageIcon originalIcon = new ImageIcon(getClass().getResource("/UI/mute.png"));
+                Image scaledImage = originalIcon.getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH);
+                ImageIcon scaledIcon = new ImageIcon(scaledImage);
+                muteButton.setIcon(scaledIcon);
+                
                 isMuted[0] = true;
             }
         });
 
         rightPanel.add(muteButton);
+
+        JButton resetButton = new JButton("new game");
+        resetButton.setPreferredSize(new Dimension(100, 30));
+        resetButton.setFocusPainted(false);
+
+        resetButton.addActionListener(e -> {
+            game.reset();
+            repaint();
+        });
+        leftPanel.add(resetButton);
 
         // Gesamtes Layout: BoxLayout horizontal
         JPanel mainPanel = new JPanel();

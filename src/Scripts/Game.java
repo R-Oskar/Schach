@@ -20,15 +20,20 @@ public class Game {
     private GameMode gameMode;
 
     public Game(GUI gui) {
+        reset();
+        this.gui = gui;
+        
+
+    }
+
+    public void reset(){
         gameModeSelection();
         board = new Board();
 
         selectedPiecePosition = new int[2];
-        this.gui = gui;
         if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
             AIMove();
         }
-
     }
 
     public void AIMove() {
@@ -57,7 +62,7 @@ public class Game {
         // KI-Berechnung in separatem Thread
         new Thread(() -> {
             try {
-                Thread.sleep(500); // optionaler Delay
+                Thread.sleep(200); // optionaler Delay
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -76,7 +81,9 @@ public class Game {
     }
 
     public void squareClicked(int row, int col) {
-
+        if(board.getAtTurn() != playerColor && gameMode != GameMode.PLAYER_VS_PLAYER){
+            return;
+        }
         Piece target = board.getPiece(row, col);
 
         if ((target != null) && ((selectedPiece == null && target.getColor() == board.getAtTurn())
