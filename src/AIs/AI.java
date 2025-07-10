@@ -30,7 +30,7 @@ abstract public class AI {
         Random rand = new Random();
         int ranNum = rand.nextInt(100) + 1;
 
-        if(ranNum <= 70){
+        if(ranNum <= 50){
             return getRandomMove(board, atTurn);
         }
 

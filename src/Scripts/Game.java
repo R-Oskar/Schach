@@ -130,7 +130,7 @@ public class Game {
         gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
         if (board.isCheckmate(board.getAtTurn())) {
-            JOptionPane.showMessageDialog(null, "Schachmatt: " + board.getAtTurn().switchColor() +
+            JOptionPane.showMessageDialog(null, "Schachmatt: " + ((board.getAtTurn().switchColor() == PieceColor.WHITE) ? "Weiß" : "Schwarz") +
                     " hat gewonnen");
         }
         if (board.isStalemate(board.getAtTurn())) {
