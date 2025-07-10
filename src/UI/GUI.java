@@ -27,7 +27,7 @@ public class GUI extends JFrame {
         setResizable(false);
         setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
 
-        SoundPlayer.play("src\\UI\\Imperial march.wav", true);
+        SoundPlayer.play("src\\UI\\Imperial march.wav", true, (float) -10.0);
 
         JPanel panel = new JPanel() {
             protected void paintComponent(Graphics g) {
