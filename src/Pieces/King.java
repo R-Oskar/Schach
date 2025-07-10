@@ -7,19 +7,13 @@ import Scripts.Board;
 import Scripts.Move;
 
 public class King extends Piece {
-    public boolean hasMoved;
 
     public King(PieceColor color) {
         super(color.equals(PieceColor.WHITE) ? "♔" : "♚", color);
-        hasMoved = false;
     }
 
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    public void setHasMoved(boolean moved) {
-        this.hasMoved = moved;
+    public char getFen() {
+        return (color == PieceColor.WHITE) ? 'K' : 'k';
     }
 
     @Override
@@ -43,9 +37,8 @@ public class King extends Piece {
                 }
             }
         }
-
         // Castling (nur wenn nicht ignoriert)
-        if (!ignoreCastling && !hasMoved) {
+        if (!ignoreCastling && !hasMoved(board)) {
             if (canCastle(board, row, col, true)) {
                 moves.add(new Move(row, col, row, col + 2)); // King moves two right
             }
@@ -57,11 +50,33 @@ public class King extends Piece {
         return moves;
     }
 
+    private boolean hasMoved(Board board) {
+        String castlingRights = board.getCastlingRights();
+        if (color == PieceColor.WHITE && (castlingRights.contains("K") || castlingRights.contains("Q"))) {
+            return false;
+        }
+        if (color == PieceColor.BLACK && (castlingRights.contains("k") || castlingRights.contains("q"))) {
+            return false;
+        }
+        return true;
+    }
+
     private boolean canCastle(Board board, int row, int col, boolean kingside) {
         int rookCol = kingside ? 7 : 0;
-        Piece rook = board.getPiece(row, rookCol);
-        if (!(rook instanceof Rook) || ((Rook) rook).hasMoved())
-            return false;
+
+        String rights = board.getCastlingRights();
+
+        if (color == PieceColor.WHITE) {
+            if (kingside && !rights.contains("K"))
+                return false;
+            if (!kingside && !rights.contains("Q"))
+                return false;
+        } else {
+            if (kingside && !rights.contains("k"))
+                return false;
+            if (!kingside && !rights.contains("q"))
+                return false;
+        }
 
         int dir = kingside ? 1 : -1;
         int endCol = kingside ? 6 : 2;
@@ -87,7 +102,6 @@ public class King extends Piece {
     @Override
     public King clone() {
         King cloned = (King) super.clone();
-        cloned.hasMoved = this.hasMoved;
         return cloned;
     }
 }

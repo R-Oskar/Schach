@@ -6,19 +6,9 @@ import Scripts.Board;
 import Scripts.Move;
 
 public class Rook extends Piece {
-    public boolean hasMoved;
 
     public Rook(PieceColor color) {
         super(color.equals(PieceColor.WHITE) ? "♖" : "♜", color);
-        hasMoved = false;
-    }
-
-    public boolean hasMoved() {
-        return hasMoved;
-    }
-
-    public void setHasMoved(boolean moved) {
-        this.hasMoved = moved;
     }
 
     public boolean canMove(int row, int col, int targetRow, int targetCol) {
@@ -35,7 +25,10 @@ public class Rook extends Piece {
     @Override
     public Rook clone() {
         Rook cloned = (Rook) super.clone();
-        cloned.hasMoved = this.hasMoved;
         return cloned;
+    }
+
+    public char getFen() {
+        return (color == PieceColor.WHITE) ? 'R' : 'r';
     }
 }

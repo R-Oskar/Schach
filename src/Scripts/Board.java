@@ -10,8 +10,29 @@ public class Board {
     private Piece[][] board;
     private Move lastMove;
 
+    private String castlingRights;
+    private PieceColor atTurn;
+
+    public String getCastlingRights() {
+        return castlingRights;
+    }
+
     public Board() {
         board = setupInitialPosition();
+        atTurn = PieceColor.WHITE;
+        castlingRights = "KQkq";
+    }
+
+    public void switchTurn() {
+        atTurn = atTurn.switchColor();
+    }
+
+    public PieceColor getAtTurn() {
+        return atTurn;
+    }
+
+    public Piece[][] getBoard() {
+        return board;
     }
 
     public static Piece[][] setupInitialPosition() {
@@ -93,28 +114,43 @@ public class Board {
     public void movePiece(Move move) {
         Piece piece = getPiece(move.fromRow, move.fromCol);
 
+        if (piece instanceof King) {
+            removeCastlingRights(atTurn);
+        }
+
+        if (piece instanceof Rook) {
+            boolean isWhite = piece.getColor() == PieceColor.WHITE;
+
+            if (move.fromCol == 7) {
+                castlingRights = castlingRights.replace(isWhite ? "K" : "k", "");
+            } else if (move.fromCol == 0) {
+                castlingRights = castlingRights.replace(isWhite ? "Q" : "q", "");
+            }
+        }
+
         if (piece instanceof King && Math.abs(move.toCol - move.fromCol) == 2) {
             int row = move.fromRow;
+
             if (move.toCol == 6) { // Short castling
                 setPiece(row, 6, piece);
                 setPiece(row, 4, null);
                 Piece rook = getPiece(row, 7);
                 setPiece(row, 5, rook);
                 setPiece(row, 7, null);
-                if (rook instanceof Rook)
-                    ((Rook) rook).setHasMoved(true);
+
             } else if (move.toCol == 2) { // Long castling
                 setPiece(row, 2, piece);
                 setPiece(row, 4, null);
                 Piece rook = getPiece(row, 0);
                 setPiece(row, 3, rook);
                 setPiece(row, 0, null);
-                if (rook instanceof Rook)
-                    ((Rook) rook).setHasMoved(true);
+
             }
-            if (piece instanceof King)
-                ((King) piece).setHasMoved(true);
+
             lastMove = move;
+            if (castlingRights.isEmpty())
+                castlingRights = "-";
+
             return;
         }
 
@@ -128,6 +164,13 @@ public class Board {
         setPiece(move.toRow, move.toCol, piece);
         setPiece(move.fromRow, move.fromCol, null);
         lastMove = move;
+    }
+
+    public void removeCastlingRights(PieceColor color) {
+        String rightsToRemove = color == PieceColor.WHITE ? "KQ" : "kq";
+        for (char c : rightsToRemove.toCharArray()) {
+            castlingRights = castlingRights.replace(String.valueOf(c), "");
+        }
     }
 
     public Board copy() {

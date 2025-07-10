@@ -1,10 +1,13 @@
 package Scripts;
 
-import AI.RandomAI;
 import Pieces.*;
 import UI.GUI;
 import java.util.List;
+
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+import AIs.AI;
 
 public class Game {
     private GUI gui;
@@ -12,33 +15,71 @@ public class Game {
 
     private Piece selectedPiece;
     private int[] selectedPiecePosition;
-                
-    private PieceColor atTurn;
+
     private PieceColor playerColor;
     private GameMode gameMode;
 
     public Game(GUI gui) {
         gameModeSelection();
         board = new Board();
-        atTurn = PieceColor.WHITE;
+
         selectedPiecePosition = new int[2];
         this.gui = gui;
-        AIMove();
+        if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
+            AIMove();
+        }
+
     }
 
     public void AIMove() {
-        if (gameMode == GameMode.RANDOM_AI && atTurn != playerColor) {
-            RandomAI randomAI = new RandomAI();
-            Move move = randomAI.getMove(board, playerColor.switchColor());
-            move(move);
-        }
+        // Titel-Animations-Thread starten
+        final boolean[] thinking = { true };
+
+        Thread animationThread = new Thread(() -> {
+            String baseTitle = "Die KI denkt nach";
+            String[] dots = { ".", "..", "..." };
+            int index = 0;
+
+            while (thinking[0]) {
+                final String title = baseTitle + dots[index % dots.length];
+                javax.swing.SwingUtilities.invokeLater(() -> gui.setTitle(title));
+                index++;
+
+                try {
+                    Thread.sleep(200); // Geschwindigkeit der Punkte
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        animationThread.start();
+
+        // KI-Berechnung in separatem Thread
+        new Thread(() -> {
+            try {
+                Thread.sleep(500); // optionaler Delay
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Move aiMove = AI.getMove(board, playerColor.switchColor(), gameMode);
+
+            // Animation stoppen
+            thinking[0] = false;
+
+            // Zurück in den EDT, um Zug auszuführen und Titel zurückzusetzen
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                move(aiMove);
+                gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
+            });
+        }).start();
     }
 
     public void squareClicked(int row, int col) {
 
         Piece target = board.getPiece(row, col);
 
-        if ((target != null) && ((selectedPiece == null && target.getColor() == atTurn)
+        if ((target != null) && ((selectedPiece == null && target.getColor() == board.getAtTurn())
                 || (selectedPiece != null && selectedPiece.getColor() == target.getColor()))) {
 
             selectedPiece = target;
@@ -63,9 +104,8 @@ public class Game {
                     break;
                 }
             }
-        }
-        if (gameMode != GameMode.PLAYER_VS_PLAYER) {
-            AIMove();
+            selectedPiece = null;
+            gui.clearAvailableMoves();
         }
     }
 
@@ -75,12 +115,6 @@ public class Game {
         }
 
         board.movePiece(move);
-
-        if (selectedPiece instanceof Rook) {
-            ((Rook) selectedPiece).setHasMoved(true);
-        } else if (selectedPiece instanceof King) {
-            ((King) selectedPiece).setHasMoved(true);
-        }
 
         gui.clearAvailableMoves();
 
@@ -92,17 +126,19 @@ public class Game {
             UI.SoundPlayer.play("src\\UI\\move-self.wav");
         }
 
-        selectedPiece = null;
-        atTurn = atTurn.switchColor();
+        board.switchTurn();
+        gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
-        if (board.isCheckmate(atTurn)) {
-            JOptionPane.showMessageDialog(null, "Schachmatt: " + atTurn.switchColor() +
+        if (board.isCheckmate(board.getAtTurn())) {
+            JOptionPane.showMessageDialog(null, "Schachmatt: " + board.getAtTurn().switchColor() +
                     " hat gewonnen");
         }
-        if (board.isStalemate(atTurn)) {
+        if (board.isStalemate(board.getAtTurn())) {
             JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
         }
-
+        if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
+            AIMove();
+        }
         gui.repaint();
     }
 
@@ -141,21 +177,23 @@ public class Game {
     }
 
     public void gameModeSelection() {
-        String[] options = { "Player vs Player", "vs random AI", "vs Easy AI", "vs Hard AI" };
+        ImageIcon icon = new ImageIcon("src\\UI\\Icon.png");
+        String[] options = { "Player vs Player", "Random AI", "Easy AI", "Mid AI", "Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,
                 "Wähle deinen Spielmodus: ",
                 "Spielmodusauswahl",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                icon,
                 options,
                 "Player vs Player");
 
         gameMode = switch (choice) {
             case "Player vs Player" -> GameMode.PLAYER_VS_PLAYER;
-            case "vs Easy AI" -> GameMode.EASY_AI;
-            case "vs Hard AI" -> GameMode.HARD_AI;
-            case "vs random AI" -> GameMode.RANDOM_AI;
+            case "Easy AI" -> GameMode.EASY_AI;
+            case "Hard AI" -> GameMode.HARD_AI;
+            case "Random AI" -> GameMode.RANDOM_AI;
+            case "Mid AI" -> GameMode.MID_AI;
             default -> GameMode.PLAYER_VS_PLAYER;
         };
 
@@ -168,7 +206,7 @@ public class Game {
                 "Wähle deine Farbe: ",
                 "Farbauswahl",
                 JOptionPane.QUESTION_MESSAGE,
-                null,
+                icon,
                 options2,
                 "Weiß");
 

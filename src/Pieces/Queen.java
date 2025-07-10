@@ -15,4 +15,8 @@ public class Queen extends Piece {
         int[] dCol = { -1, 0, 1, 1, 1, 0, -1, -1 };
         return getSlidingMoves(board, row, col, dRow, dCol);
     }
+
+     public char getFen(){
+        return (color == PieceColor.WHITE) ? 'Q' : 'q';
+    }
 }
