@@ -22,11 +22,10 @@ public class Game {
     public Game(GUI gui) {
         reset();
         this.gui = gui;
-        
 
     }
 
-    public void reset(){
+    public void reset() {
         gameModeSelection();
         board = new Board();
 
@@ -42,7 +41,7 @@ public class Game {
 
         Thread animationThread = new Thread(() -> {
             String baseTitle = "Die KI denkt nach";
-            String[] dots = { ".", "..", "..." , ".."};
+            String[] dots = { ".", "..", "...", ".." };
             int index = 0;
 
             while (thinking[0]) {
@@ -81,7 +80,7 @@ public class Game {
     }
 
     public void squareClicked(int row, int col) {
-        if(board.getAtTurn() != playerColor && gameMode != GameMode.PLAYER_VS_PLAYER){
+        if (board.getAtTurn() != playerColor && gameMode != GameMode.PLAYER_VS_PLAYER) {
             return;
         }
         Piece target = board.getPiece(row, col);
@@ -137,11 +136,20 @@ public class Game {
         gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
         if (board.isCheckmate(board.getAtTurn())) {
-            JOptionPane.showMessageDialog(null, "Schachmatt: " + ((board.getAtTurn().switchColor() == PieceColor.WHITE) ? "Weiß" : "Schwarz") +
-                    " hat gewonnen");
+            JOptionPane.showMessageDialog(null,
+                    "Schachmatt: " + ((board.getAtTurn().switchColor() == PieceColor.WHITE) ? "Weiß" : "Schwarz")
+                            + " hat gewonnen",
+                    "Schachmatt",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    new ImageIcon("src\\UI\\Icon.png"));
+
         }
         if (board.isStalemate(board.getAtTurn())) {
-            JOptionPane.showMessageDialog(null, "Patt: Unentschieden");
+            JOptionPane.showMessageDialog(null,
+                    "Patt: Unentschieden",
+                    "Patt",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    new ImageIcon("src\\UI\\Icon.png"));
         }
         if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
             AIMove();
