@@ -104,7 +104,6 @@ public class StockfishEngine {
     public String getBestMove(String fen, int depth) throws IOException {
         sendCommand("position fen " + fen);
         sendCommand("go depth " + depth);
-
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.startsWith("bestmove")) {
