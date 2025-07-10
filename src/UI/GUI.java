@@ -15,21 +15,27 @@ import java.awt.event.*;
 
 public class GUI extends JFrame {
     private static final int TILE_SIZE = 90;
+    private static final int BOARD_SIZE = Board.BOARD_SIZE;
 
     private Game game;
-
     private List<Move> availableMoves = new ArrayList<>();
 
     public GUI() {
         game = new Game(this);
+
         setTitle("Weiß ist am Zug");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false); // allow resizing
+        setResizable(false);
         setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
 
         SoundPlayer.play("src\\UI\\Imperial march.wav", true, -10.0f);
 
-        // Create the chessboard panel
+        // Linkes Panel (Beispiel: Info)
+        JPanel leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(150, TILE_SIZE * BOARD_SIZE));
+        leftPanel.setBackground(Color.DARK_GRAY);
+
+        // Mittleres Panel: Schachbrett
         JPanel boardPanel = new JPanel() {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -38,6 +44,11 @@ public class GUI extends JFrame {
                 drawPieces(g);
             }
         };
+        Dimension boardSize = new Dimension(TILE_SIZE * BOARD_SIZE, TILE_SIZE * BOARD_SIZE);
+        boardPanel.setPreferredSize(boardSize);
+        boardPanel.setMaximumSize(boardSize);
+        boardPanel.setMinimumSize(boardSize);
+        boardPanel.setBackground(Color.DARK_GRAY); // Match dark squares
 
         boardPanel.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
@@ -45,34 +56,36 @@ public class GUI extends JFrame {
             }
         });
 
-        // Set fixed size for chessboard
-        Dimension boardSize = new Dimension(TILE_SIZE * Board.BOARD_SIZE, TILE_SIZE * Board.BOARD_SIZE);
-        boardPanel.setPreferredSize(boardSize);
-        boardPanel.setMaximumSize(boardSize);
-        boardPanel.setMinimumSize(boardSize);
+        // Rechtes Panel (z.B. Buttons)
+        JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(150, TILE_SIZE * BOARD_SIZE));
+        rightPanel.setBackground(Color.LIGHT_GRAY);
 
-        // Wrap the boardPanel in a container that centers it
-        JPanel centerWrapper = new JPanel(new GridBagLayout());
-        centerWrapper.add(boardPanel);
+        JButton muteButton = new JButton("mute");
+        muteButton.setPreferredSize(new Dimension(80, 30));
+        muteButton.addActionListener(e -> {
+            // Sound-Steuerung hier
+        });
+        rightPanel.add(muteButton);
 
-        // Set the layout of the main frame
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(centerWrapper, BorderLayout.CENTER);
+        // Gesamtes Layout: BoxLayout horizontal
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        mainPanel.setBackground(Color.DARK_GRAY); // Match left panel
 
-        // Optional: Add padding around the board
-        centerWrapper.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        mainPanel.add(leftPanel);
+        mainPanel.add(boardPanel);
+        mainPanel.add(rightPanel);
+
+        getContentPane().setBackground(Color.DARK_GRAY); // Match left panel
+        getContentPane().add(mainPanel);
 
         pack();
-        // Mindestgröße berechnen: Schachbrettgröße + Padding + TopPanel-Höhe
-        int boardPixels = TILE_SIZE * Board.BOARD_SIZE;
-        int extraPaddingForTitleBar = 40;
-        int extraPaddingSideways = 16;
-
-        setSize(new Dimension(boardPixels + extraPaddingSideways + 300, boardPixels + extraPaddingForTitleBar));
+        setLocationRelativeTo(null);
         setResizable(false);
-
-        setLocationRelativeTo(null); // center on screen
     }
+
+    // Deine bisherigen draw Methoden hier...
 
     private void drawBoard(Graphics g) {
         for (int row = 0; row < Board.BOARD_SIZE; row++) {
@@ -109,7 +122,7 @@ public class GUI extends JFrame {
 
     private void drawMoveHints(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(new Color(128, 128, 128, 160)); // halbtransparenter Grau
+        g2.setColor(new Color(128, 128, 128, 160)); // halbtransparent grau
 
         int diameter = TILE_SIZE / 4;
 
@@ -123,5 +136,4 @@ public class GUI extends JFrame {
             g2.fillOval(x, y, diameter, diameter);
         }
     }
-
 }

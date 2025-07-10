@@ -1,1 +1,3 @@
 Icon: https://icons8.de/icons/set/chess
+Speaker: https://www.flaticon.com/free-icon/speaker-filled-audio-tool_59284?term=speaker&page=1&position=1&origin=search&related_id=59284
+Mute: https://www.flaticon.com/free-icon/mute_5949045

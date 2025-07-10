@@ -37,7 +37,7 @@ public class Game {
 
         Thread animationThread = new Thread(() -> {
             String baseTitle = "Die KI denkt nach";
-            String[] dots = { ".", "..", "..." };
+            String[] dots = { ".", "..", "..." , ".."};
             int index = 0;
 
             while (thinking[0]) {
