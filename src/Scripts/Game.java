@@ -57,7 +57,7 @@ public class Game {
         // KI-Berechnung in separatem Thread
         new Thread(() -> {
             try {
-                Thread.sleep(200); // optionaler Delay
+                Thread.sleep(500); // optionaler Delay
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
