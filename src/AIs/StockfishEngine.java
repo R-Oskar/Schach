@@ -113,13 +113,7 @@ public class StockfishEngine {
         String bestMove = null;
         String line;
 
-
-        final boolean [] weitermachen = {true};
-
-        int i = 1;
         while ((line = reader.readLine()) != null) {
-            System.err.println(++i);
-            System.err.println("Stockfish: " + line);
 
             // Prüfe immer zuerst auf "bestmove"
             if (line.contains("bestmove")) {

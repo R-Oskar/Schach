@@ -95,7 +95,7 @@ public class GUI extends JFrame {
 
         rightPanel.add(muteButton);
 
-        JButton resetButton = new JButton("new game");
+        JButton resetButton = new JButton("neues Spiel");
         resetButton.setPreferredSize(new Dimension(100, 30));
         resetButton.setFocusPainted(false);
 

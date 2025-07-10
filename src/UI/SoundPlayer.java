@@ -30,11 +30,12 @@ public class SoundPlayer {
         return null;
     }
 
-    public static void toggleMute(Clip clip){
-        if(clip.isActive()){
+    public static void toggleMute(Clip clip) {
+        if (clip.isActive()) {
             clip.stop();
-        } else{
+        } else {
             clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 }
