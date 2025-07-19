@@ -5,6 +5,7 @@ import UI.GUI;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import AIs.AI;
@@ -127,29 +128,48 @@ public class Game {
         promotion(move.toRow, move.toCol);
 
         if (move.moveType == MoveType.EN_PASSANT || move.moveType == MoveType.CAPTURE) {
-            UI.SoundPlayer.play("src\\UI\\capture.wav");
+            UI.SoundPlayer.play("src\\UI\\sounds\\capture.wav");
         } else {
-            UI.SoundPlayer.play("src\\UI\\move-self.wav");
+            UI.SoundPlayer.play("src\\UI\\sounds\\move-self.wav");
         }
 
         board.switchTurn();
         gui.setTitle((board.getAtTurn() == PieceColor.WHITE) ? "Weiß ist am Zug" : "Schwarz ist am Zug");
 
         if (board.isCheckmate(board.getAtTurn())) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane optionPane = new JOptionPane(
                     "Schachmatt: " + ((board.getAtTurn().switchColor() == PieceColor.WHITE) ? "Weiß" : "Schwarz")
                             + " hat gewonnen",
-                    "Schachmatt",
                     JOptionPane.INFORMATION_MESSAGE,
-                    new ImageIcon("src\\UI\\Icon.png"));
+                    JOptionPane.DEFAULT_OPTION,
+                    new ImageIcon("src\\UI\\pictures\\Icon.png"),
+                    new Object[] {}, // keine Buttons → kein Fokus
+                    null // kein voreingestellter Wert
+            );
+
+            JDialog dialog = optionPane.createDialog("Schachmatt");
+            dialog.setFocusableWindowState(false); // verhindert Fokus beim Öffnen (optional)
+            dialog.setModal(true);
+            dialog.setVisible(true);
 
         }
         if (board.isStalemate(board.getAtTurn())) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane optionPane = new JOptionPane(
                     "Patt: Unentschieden",
-                    "Patt",
                     JOptionPane.INFORMATION_MESSAGE,
-                    new ImageIcon("src\\UI\\Icon.png"));
+                    JOptionPane.DEFAULT_OPTION,
+                    new ImageIcon("src\\UI\\pictures\\Icon.png"));
+
+            JDialog dialog = optionPane.createDialog("Patt");
+
+            // Fokus vom OK-Button wegnehmen:
+            dialog.addWindowFocusListener(new java.awt.event.WindowAdapter() {
+                public void windowGainedFocus(java.awt.event.WindowEvent e) {
+                    dialog.getRootPane().getContentPane().requestFocusInWindow();
+                }
+            });
+
+            dialog.setVisible(true);
         }
         if (gameMode != GameMode.PLAYER_VS_PLAYER && board.getAtTurn() != playerColor) {
             AIMove();
@@ -169,7 +189,7 @@ public class Game {
                         "Wähle Figur zur Umwandlung:",
                         "Bauernumwandlung",
                         JOptionPane.QUESTION_MESSAGE,
-                        new ImageIcon("src\\UI\\Icon.png"),
+                        new ImageIcon("src\\UI\\pictures\\Icon.png"),
                         options,
                         "Dame");
 
@@ -192,7 +212,7 @@ public class Game {
     }
 
     public void gameModeSelection() {
-        ImageIcon icon = new ImageIcon("src\\UI\\Icon.png");
+        ImageIcon icon = new ImageIcon("src\\UI\\pictures\\Icon.png");
         String[] options = { "Player vs Player", "Random AI", "Easy AI", "Mid AI", "Hard AI" };
         String choice = (String) JOptionPane.showInputDialog(
                 null,

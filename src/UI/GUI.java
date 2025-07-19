@@ -28,9 +28,9 @@ public class GUI extends JFrame {
         setTitle("Weiß ist am Zug");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
-        setIconImage(new ImageIcon(getClass().getResource("/UI/Icon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/UI/pictures/favicon.png")).getImage());
 
-        backroundMusic = SoundPlayer.play("src\\UI\\Imperial march.wav", true, -10.0f);
+        backroundMusic = SoundPlayer.play("src\\UI\\sounds\\Imperial march.wav", true, -10.0f);
 
         // Linkes Panel (Beispiel: Info)
         JPanel leftPanel = new JPanel();
@@ -64,7 +64,7 @@ public class GUI extends JFrame {
         rightPanel.setBackground(Color.LIGHT_GRAY);
 
         JButton muteButton = new JButton();
-        ImageIcon originalIcon2 = new ImageIcon(getClass().getResource("/UI/speaker.png"));
+        ImageIcon originalIcon2 = new ImageIcon(getClass().getResource("/UI/pictures/speaker.png"));
         Image scaledImage2 = originalIcon2.getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon2 = new ImageIcon(scaledImage2);
         muteButton.setIcon(scaledIcon2);
@@ -77,14 +77,14 @@ public class GUI extends JFrame {
         muteButton.addActionListener(e -> {
             SoundPlayer.toggleMute(backroundMusic);
             if (isMuted[0]) {
-                ImageIcon originalIcon = new ImageIcon(getClass().getResource("/UI/speaker.png"));
+                ImageIcon originalIcon = new ImageIcon(getClass().getResource("/UI/pictures/speaker.png"));
                 Image scaledImage = originalIcon.getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImage);
                 muteButton.setIcon(scaledIcon);
 
                 isMuted[0] = false;
             } else {
-                ImageIcon originalIcon = new ImageIcon(getClass().getResource("/UI/mute.png"));
+                ImageIcon originalIcon = new ImageIcon(getClass().getResource("/UI/pictures/mute.png"));
                 Image scaledImage = originalIcon.getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH);
                 ImageIcon scaledIcon = new ImageIcon(scaledImage);
                 muteButton.setIcon(scaledIcon);
@@ -95,8 +95,8 @@ public class GUI extends JFrame {
 
         rightPanel.add(muteButton);
 
-        JButton resetButton = new JButton("neues Spiel");
-        resetButton.setPreferredSize(new Dimension(100, 30));
+        JButton resetButton = new JButton("Neues Spiel");
+        resetButton.setPreferredSize(new Dimension(120, 30));
         resetButton.setFocusPainted(false);
 
         resetButton.addActionListener(e -> {
