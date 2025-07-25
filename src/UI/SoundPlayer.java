@@ -1,7 +1,7 @@
 package UI;
 
-import javax.sound.sampled.*;
 import java.io.File;
+import javax.sound.sampled.*;
 
 public class SoundPlayer {
     public static Clip play(String filePath) {

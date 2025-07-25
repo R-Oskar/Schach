@@ -1,14 +1,12 @@
 package Scripts;
 
+import AIs.AI;
 import Pieces.*;
 import UI.GUI;
 import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-
-import AIs.AI;
 
 public class Game {
     private GUI gui;
@@ -148,7 +146,7 @@ public class Game {
             );
 
             JDialog dialog = optionPane.createDialog("Schachmatt");
-            dialog.setFocusableWindowState(false); // verhindert Fokus beim Öffnen (optional)
+            dialog.setFocusableWindowState(false); // verhindert Fokus beim Öffnen
             dialog.setModal(true);
             dialog.setVisible(true);
 

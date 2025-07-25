@@ -14,7 +14,6 @@ public class easyAI extends AI {
         return AI.getRandomMove(board, atTurn);
     }
 
-
     public static Move getEasyMove(Board board, PieceColor atTurn) {
         return null;
     }

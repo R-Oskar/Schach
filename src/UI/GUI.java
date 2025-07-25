@@ -1,18 +1,15 @@
 package UI;
 
-import javax.sound.sampled.Clip;
-import javax.swing.*;
-
 import Pieces.Piece;
 import Scripts.Board;
 import Scripts.Game;
 import Scripts.Move;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.sound.sampled.Clip;
+import javax.swing.*;
 
 public class GUI extends JFrame {
     private static final int TILE_SIZE = 90;
@@ -32,7 +29,7 @@ public class GUI extends JFrame {
 
         backroundMusic = SoundPlayer.play("src\\UI\\sounds\\Imperial march.wav", true, -10.0f);
 
-        // Linkes Panel (Beispiel: Info)
+        // Linkes Panel
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(150, TILE_SIZE * BOARD_SIZE));
         leftPanel.setBackground(Color.DARK_GRAY);
@@ -58,7 +55,7 @@ public class GUI extends JFrame {
             }
         });
 
-        // Rechtes Panel (z.B. Buttons)
+        // Rechtes Panel
         JPanel rightPanel = new JPanel();
         rightPanel.setPreferredSize(new Dimension(150, TILE_SIZE * BOARD_SIZE));
         rightPanel.setBackground(Color.LIGHT_GRAY);
@@ -108,21 +105,19 @@ public class GUI extends JFrame {
         // Gesamtes Layout: BoxLayout horizontal
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        mainPanel.setBackground(Color.DARK_GRAY); // Match left panel
+        mainPanel.setBackground(Color.DARK_GRAY);
 
         mainPanel.add(leftPanel);
         mainPanel.add(boardPanel);
         mainPanel.add(rightPanel);
 
-        getContentPane().setBackground(Color.DARK_GRAY); // Match left panel
+        getContentPane().setBackground(Color.DARK_GRAY);
         getContentPane().add(mainPanel);
 
         pack();
         setLocationRelativeTo(null);
         setResizable(false);
     }
-
-    // Deine bisherigen draw Methoden hier...
 
     private void drawBoard(Graphics g) {
         for (int row = 0; row < Board.BOARD_SIZE; row++) {
